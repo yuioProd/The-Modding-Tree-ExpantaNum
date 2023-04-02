@@ -42,6 +42,9 @@ function getPointGen() {
 		return new ExpantaNum(0)
 
 	let gain = new ExpantaNum(1)
+
+	gain = gain.times(tmp["p"].effect)
+
 	return gain
 }
 

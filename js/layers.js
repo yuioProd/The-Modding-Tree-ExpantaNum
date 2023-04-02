@@ -13,8 +13,14 @@ addLayer("p", {
     baseAmount() {return player.points}, // Get the current amount of baseResource
     type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
     exponent: 0.5, // Prestige currency exponent
+    effect() {
+        return new ExpantaNum.pow(2, player[this.layer].points);
+    },
+    effectDescription(){
+        return "which x" + format(tmp[this.layer].effect)
+    },
     gainMult() { // Calculate the multiplier for main currency from bonuses
-        mult = new ExpantaNum(player[this.layer].points)
+        mult = new ExpantaNum(1)
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
