@@ -39,6 +39,7 @@ addLayer("p", {
     layerShown(){return true},
     passiveGeneration() {
         if (hasUpgrade(this.layer, "14")) return getResetGain(this.layer, "static")
+        else return ExpantaNum(0)
     },
     upgrades: {
         11: {
