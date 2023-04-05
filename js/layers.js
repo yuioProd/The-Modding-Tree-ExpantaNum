@@ -41,6 +41,9 @@ addLayer("p", {
         if (hasUpgrade(this.layer, "14")) return getResetGain(this.layer, "static")
         else return ExpantaNum(0)
     },
+    automate() {
+        if (hasUpgrade(this.layer, "15") && canBuyBuyable(this.layer, "11")) buyBuyable(this.layer, "11")
+    },
     upgrades: {
         11: {
             title: "Test",
@@ -80,7 +83,7 @@ addLayer("p", {
         },
         15: {
             title: "Test5",
-            description: "???",
+            description: "Automate buying testing test buyable.",
             cost: new ExpantaNum("e1.798e308"),
             effect() {
                 return new ExpantaNum(0.5);
