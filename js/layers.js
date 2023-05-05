@@ -16,6 +16,7 @@ addLayer("p", {
     effect() {
         mult = new ExpantaNum(player[this.layer].points).add(1)
         if (hasUpgrade(this.layer, "11")) mult = mult.pow(upgradeEffect(this.layer, "11"))
+        if (hasUpgrade(this.layer, "16")) mult = mult.pow(upgradeEffect(this.layer, "16"))
         return mult
     },
     effectDescription() {
@@ -42,7 +43,9 @@ addLayer("p", {
         else return ExpantaNum(0)
     },
     automate() {
-        if (hasUpgrade(this.layer, "15") && canBuyBuyable(this.layer, "11")) buyBuyable(this.layer, "11")
+        if (hasUpgrade(this.layer, "16") && canBuyBuyable(this.layer, "11")) buyMaxBuyable(this.layer, "11")
+        else if (hasUpgrade(this.layer, "15") && canBuyBuyable(this.layer, "11")) buyBuyable(this.layer, "11")
+        //console.log(ExpantaNum(100).tetr(2).ssqrt().toString())
     },
     upgrades: {
         11: {
@@ -89,12 +92,24 @@ addLayer("p", {
                 return new ExpantaNum(0.5);
             },
         },
+        16: {
+            title: "Test6",
+            description() {
+                return "Points rise the test points effect.\n\
+                \n\
+                Currently: ^" + format(upgradeEffect(this.layer, "16"))
+            },
+            cost: new ExpantaNum("e1.111e1111"),
+            effect() {
+                return new ExpantaNum(player.points).add(10).logBase(10).pow(0.2);
+            },
+        },
     },
     buyables: {
         11: {
             title: "Testing test",
             cost(x) { 
-                let cost = ExpantaNum.pow("1e20000020", x.add(1).tetr(2).times(0.0000001).add(1))
+                let cost = ExpantaNum.pow("1e20000025", x.tetr(2).times(0.0000001).add(1))
                 return cost.floor()
             },
             effect(x) {
@@ -109,14 +124,15 @@ addLayer("p", {
             },
             unlocked() { return hasUpgrade(this.layer, "14") }, 
             canAfford() {
-                return player[this.layer].points.gte(tmp[this.layer].buyables[this.id].cost)
+                return player[this.layer].points.gte(this.cost())
             },
-            buyMax() {}, // You'll have to handle this yourself if you want
+            buyMax() {
+                let amt = ExpantaNum(player[this.layer].points).logBase("1e20000025").ssqrt().times(10000000).sub(1).floor()
+                setBuyableAmount(this.layer, this.id, amt)
+            },
             buy() { 
-                cost = tmp[this.layer].buyables[this.id].cost
-                player[this.layer].points = player[this.layer].points.sub(cost)	
-                player[this.layer].buyables[this.id] = player[this.layer].buyables[this.id].add(1)
-                player[this.layer].spentOnBuyables = player[this.layer].spentOnBuyables.add(cost) // This is a built-in system that you can use for respeccing but it only works with a single ExpantaNum value
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
         },
     },
